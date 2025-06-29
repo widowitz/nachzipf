@@ -6,6 +6,8 @@ Generates personalized English exercises using OpenAI based on unit selection an
 
 import os
 import sys
+import subprocess
+import platform
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -195,6 +197,23 @@ def save_exercises(exercises: str, unit: int) -> Path:
     except Exception as e:
         raise Exception(f"Error saving exercises: {e}")
 
+def open_file(file_path: Path) -> None:
+    """Open the generated file with the default application."""
+    try:
+        system = platform.system()
+        if system == "Darwin":  # macOS
+            subprocess.run(["open", str(file_path)], check=True)
+        elif system == "Windows":
+            subprocess.run(["start", str(file_path)], shell=True, check=True)
+        elif system == "Linux":
+            subprocess.run(["xdg-open", str(file_path)], check=True)
+        else:
+            print(f"⚠️ Cannot automatically open file on {system}. Please open manually: {file_path}")
+    except subprocess.CalledProcessError:
+        print(f"⚠️ Could not open file automatically. Please open manually: {file_path}")
+    except Exception as e:
+        print(f"⚠️ Error opening file: {e}. Please open manually: {file_path}")
+
 def main():
     """Main function to orchestrate the exercise generation."""
     try:
@@ -220,6 +239,10 @@ def main():
         print(f"✅ Exercises generated successfully!")
         print(f"📁 Saved to: {output_file}")
         print(f"🎯 Unit {unit} exercises are ready for Marlene!")
+        
+        # Open the file
+        print(f"📖 Opening file in default application...")
+        open_file(output_file)
         
     except KeyboardInterrupt:
         print("\n👋 Goodbye!")
