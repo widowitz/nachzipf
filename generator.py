@@ -6,26 +6,82 @@ Generates personalized English exercises using OpenAI based on unit selection an
 
 import os
 import sys
+import argparse
 import subprocess
 import platform
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict
 import openai
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-# File paths
-BASE_DIR = Path(__file__).parent
-PROMPT_FILE = BASE_DIR / "03 Prompt" / "prompt.md"
-ERROR_FILE = BASE_DIR / "02 Fehlerheft" / "marlene_fehlerheft.txt"
-FERSTERER_FILE = BASE_DIR / "01 Lernmaterial" / "a Paket von Fersterer" / "Fersterer Stoff für Marlene Englisch Sommer 2025.md"
-SUMMARY_BY_UNIT_FILE = BASE_DIR / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_by_unit.md"
-SUMMARY_SHORT_FILE = BASE_DIR / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_short.md"
-SUMMARY_LONG_FILE = BASE_DIR / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_long.md"
-OUTPUT_DIR = BASE_DIR / "04 Uebungen"
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class Config:
+    """Central location for all file paths used by the generator."""
+
+    base_dir: Path = field(default_factory=lambda: Path(__file__).parent)
+    prompt_file: Path = field(init=False)
+    error_file: Path = field(init=False)
+    fersterer_file: Path = field(init=False)
+    summary_by_unit_file: Path = field(init=False)
+    summary_short_file: Path = field(init=False)
+    summary_long_file: Path = field(init=False)
+    output_dir: Path = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.prompt_file = self.base_dir / "03 Prompt" / "prompt.md"
+        self.error_file = self.base_dir / "02 Fehlerheft" / "marlene_fehlerheft.txt"
+        self.fersterer_file = (
+            self.base_dir
+            / "01 Lernmaterial"
+            / "a Paket von Fersterer"
+            / "Fersterer Stoff für Marlene Englisch Sommer 2025.md"
+        )
+        self.summary_by_unit_file = (
+            self.base_dir / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_by_unit.md"
+        )
+        self.summary_short_file = (
+            self.base_dir / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_short.md"
+        )
+        self.summary_long_file = (
+            self.base_dir / "01 Lernmaterial" / "a Paket von Fersterer" / "summary_long.md"
+        )
+        self.output_dir = self.base_dir / "04 Uebungen"
+
+
+CONFIG = Config()
+
+# Mapping of English month names to their German equivalents
+MONTHS_DE = {
+    "January": "Januar",
+    "February": "Februar",
+    "March": "März",
+    "April": "April",
+    "May": "Mai",
+    "June": "Juni",
+    "July": "Juli",
+    "August": "August",
+    "September": "September",
+    "October": "Oktober",
+    "November": "November",
+    "December": "Dezember",
+}
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Generate daily English exercises for Marlene")
+    parser.add_argument("--unit", "-u", type=int, help="Unit number to practice (1-13)")
+    return parser.parse_args()
 
 def setup_openai() -> bool:
     """Setup OpenAI client with API key from environment."""
@@ -38,17 +94,17 @@ def setup_openai() -> bool:
     openai.api_key = api_key
     return True
 
-def validate_unit(unit_str: str) -> Optional[int]:
-    """Validate unit input is between 1-13."""
+def validate_unit(unit_value: int | str) -> Optional[int]:
+    """Validate unit input is between 1 and 13."""
     try:
-        unit = int(unit_str)
+        unit = int(unit_value)
         if 1 <= unit <= 13:
             return unit
         else:
             print(f"❌ Unit must be between 1 and 13. You entered: {unit}")
             return None
     except ValueError:
-        print(f"❌ Please enter a valid number. You entered: {unit_str}")
+        print(f"❌ Please enter a valid number. You entered: {unit_value}")
         return None
 
 def read_file_safely(file_path: Path) -> str:
@@ -97,12 +153,23 @@ def build_context(unit: int) -> str:
     print(f"📖 Reading learning materials for Unit {unit}...")
     
     # Read all required files
-    prompt_content = read_file_safely(PROMPT_FILE)
-    error_content = read_file_safely(ERROR_FILE)
-    fersterer_content = read_file_safely(FERSTERER_FILE)
-    summary_by_unit_content = read_file_safely(SUMMARY_BY_UNIT_FILE)
-    summary_short_content = read_file_safely(SUMMARY_SHORT_FILE)
-    summary_long_content = read_file_safely(SUMMARY_LONG_FILE)
+    files: Dict[str, Path] = {
+        "prompt": CONFIG.prompt_file,
+        "error": CONFIG.error_file,
+        "fersterer": CONFIG.fersterer_file,
+        "summary_by_unit": CONFIG.summary_by_unit_file,
+        "summary_short": CONFIG.summary_short_file,
+        "summary_long": CONFIG.summary_long_file,
+    }
+
+    contents = {name: read_file_safely(path) for name, path in files.items()}
+
+    prompt_content = contents["prompt"]
+    error_content = contents["error"]
+    fersterer_content = contents["fersterer"]
+    summary_by_unit_content = contents["summary_by_unit"]
+    summary_short_content = contents["summary_short"]
+    summary_long_content = contents["summary_long"]
     
     # Check if critical files are available
     if not prompt_content:
@@ -168,23 +235,17 @@ def save_exercises(exercises: str, unit: int) -> Path:
     """Save generated exercises to timestamped file."""
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename = f"{timestamp}_unit_{unit}.md"
-    output_file = OUTPUT_DIR / filename
+    output_file = CONFIG.output_dir / filename
     
     # Ensure output directory exists
-    OUTPUT_DIR.mkdir(exist_ok=True)
+    CONFIG.output_dir.mkdir(exist_ok=True)
     
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             # Write the proper German header with actual date
             current_date = datetime.now().strftime('%d. %B %Y')
             # Convert English month names to German
-            month_translation = {
-                'January': 'Januar', 'February': 'Februar', 'March': 'März',
-                'April': 'April', 'May': 'Mai', 'June': 'Juni',
-                'July': 'Juli', 'August': 'August', 'September': 'September',
-                'October': 'Oktober', 'November': 'November', 'December': 'Dezember'
-            }
-            for eng, ger in month_translation.items():
+            for eng, ger in MONTHS_DE.items():
                 current_date = current_date.replace(eng, ger)
             
             f.write(f"# Englisch Übungen für Marlene\n")
@@ -221,8 +282,11 @@ def main():
         if not setup_openai():
             sys.exit(1)
         
-        # Get unit selection
-        unit = get_unit_from_user()
+        # Parse command line arguments
+        args = parse_args()
+
+        # Determine unit either from CLI or interactively
+        unit = validate_unit(args.unit) if args.unit is not None else get_unit_from_user()
         if unit is None:
             sys.exit(0)
         
