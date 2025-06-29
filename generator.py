@@ -63,19 +63,31 @@ def read_file_safely(file_path: Path) -> str:
 
 def get_unit_from_user() -> Optional[int]:
     """Prompt user for unit selection with validation."""
-    print("🎯 Welcome to Marlene's Daily English Exercise Generator!")
-    print("📚 Available units: 1-13")
-    print()
+    # ANSI color codes
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    END = '\033[0m'
+    
+    print(f"\n{CYAN}{'='*60}{END}")
+    print(f"{CYAN}{BOLD}🎯 Welcome to Marlene's Daily English Exercise Generator! 🎯{END}")
+    print(f"{CYAN}{'='*60}{END}")
+    print(f"{GREEN}📚 Available units: {YELLOW}{BOLD}1-13{END}")
+    print(f"{GREEN}📖 Choose a unit to create personalized exercises for Marlene{END}")
+    print(f"{CYAN}{'='*60}{END}\n")
     
     while True:
         try:
-            unit_input = input("Which unit would you like to work on today? (1-13): ").strip()
+            unit_input = input(f"{BOLD}{GREEN}➤ Which unit would you like to work on today? {YELLOW}(1-13): {END}").strip()
             unit = validate_unit(unit_input)
             if unit is not None:
+                print(f"\n{GREEN}✅ Great! Working on Unit {BOLD}{unit}{END}{GREEN} for Marlene!{END}\n")
                 return unit
-            print("Please try again.\n")
+            print(f"{RED}❌ Please try again.{END}\n")
         except KeyboardInterrupt:
-            print("\n👋 Goodbye!")
+            print(f"\n{YELLOW}👋 Goodbye!{END}")
             return None
 
 def build_context(unit: int) -> str:
@@ -161,8 +173,21 @@ def save_exercises(exercises: str, unit: int) -> Path:
     
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(f"# English Exercises - Unit {unit}\n")
-            f.write(f"*Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n\n")
+            # Write the proper German header with actual date
+            current_date = datetime.now().strftime('%d. %B %Y')
+            # Convert English month names to German
+            month_translation = {
+                'January': 'Januar', 'February': 'Februar', 'March': 'März',
+                'April': 'April', 'May': 'Mai', 'June': 'Juni',
+                'July': 'Juli', 'August': 'August', 'September': 'September',
+                'October': 'Oktober', 'November': 'November', 'December': 'Dezember'
+            }
+            for eng, ger in month_translation.items():
+                current_date = current_date.replace(eng, ger)
+            
+            f.write(f"# Englisch Übungen für Marlene\n")
+            f.write(f"**Datum:** {current_date}  \n")
+            f.write(f"**Unit:** {unit}\n\n")
             f.write(exercises)
         
         return output_file

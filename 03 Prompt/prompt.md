@@ -18,10 +18,10 @@ Erzeuge ein individuelles Übungsset für Marlene für **heute**, das
 2. **bekannte Fehler der letzten Tage** gezielt abfragt (aus dem Fehlerheft),
 
 **Format:**
- - Überschrift für den Tag einfach nur "Englisch Übungen für Marlene", Datum, und um welche Unit es heute geht
- - dann einfach als Markdown mit Emojis und Überschriften die einzelnen Todos für den Tag. Nicht in einen Code Block packen das Ganze!
+ - KEINE Überschrift oder Header erstellen! Das macht das System automatisch.
+ - Starte direkt mit den Übungen als Markdown mit Emojis und Überschriften. Nicht in einen Code Block packen das Ganze!
  - erstmal ein paar gezielte Übungen zu jüngsten Fehlern
- - dann ein Text auf Englisch zum Abschreiben von der aktuellen Unit. Etwa 10 Sätze. Nutzend die zugehörigen Vokabel, Grammatik, und jüngste Fehler. Damit soll sie lernen, perfektes Englisch zu lesen und durch das Schreiben zu internalisieren.
+ - dann ein Text auf Englisch zum Abschreiben von der aktuellen Unit. Etwa 10 Sätze. Nutzend die zugehörigen Vokabel, Grammatik, und jüngste Fehler. Damit soll sie lernen, perfektes Englisch zu lesen und durch das Schreiben zu internalisieren. Dieser Text sollte vor allem Vokabel aus dem Lernstoff insgesamt haben; keine zu komplexen Worte verwenden wie zB "gazing" oder so: es ist 6. Schulstufe (2. Klasse Gymnasium) in Österreich
 
 **Details:**
  - die Instruktionen, was zu tun ist, bitte auf Deutsch geben. Auch die Überschriften zu den Übungen
