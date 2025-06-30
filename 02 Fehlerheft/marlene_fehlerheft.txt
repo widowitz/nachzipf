@@ -1,15 +1,23 @@
 # 28Jun
 
-He go to school
-anstatt goes
+He go to school -> goes
 
 # 29Jun
 
-she washs
-anstatt washes
+she washs -> washes
+he switchs -> switches
 
-he switchs
-anstatt switches
+# 30 Jun:
 
-
+my teacher give -> gives
+my mum make -> makes
+they was -> were
+he watch -> watches
+abaut -> about
+intresting -> interesting
+who wear? -> who wears?
+lernen: learning -> to learn  # remember to use this form to describe base form of a verb
+warten: waiting -> to wait    # same here
+vocabulary: Dachboden -> attic
+spelling: the apples are in the celler -> cellar
 
