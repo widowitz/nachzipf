@@ -21,3 +21,16 @@ warten: waiting -> to wait    # same here
 vocabulary: Dachboden -> attic
 spelling: the apples are in the celler -> cellar
 
+# 01 Jul:
+
+they have just fall -> fallen
+brithplace -> birthplace
+the holidays was great -> were great
+sandwitch -> sandwich
+snackes -> snakes (do not confuse a snake Schlange with a snack Leckerei)
+vocabulary: creature = Lebewesen, not "erschaffen" --> "erschaffen" is "to create"
+vocabulary: habitat = Lebensraum
+vocabulary: Dachboden = attic (not: roof)
+spelling: interessting --> interesting
+
+
