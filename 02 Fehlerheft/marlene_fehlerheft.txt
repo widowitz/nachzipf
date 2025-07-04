@@ -33,4 +33,36 @@ vocabulary: habitat = Lebensraum
 vocabulary: Dachboden = attic (not: roof)
 spelling: interessting --> interesting
 
+# 02 Jul:
+
+Vocabulary: ausser = unless
+Vocabulary: exhausted = erschöpft
+Vocabulary: race = wettrennen
+I have to cat's --> I have two cats (possessive vs. Plural!)
+
+
+Spelling: aples -> apples
+Spelling: celler -> cellar
+
+„Sie waren gestern im Park“:
+She was yesterday in the park —> They were in the park yesterday
+(she vs. They, was vs. Were, word order yesterday at the end)
+
+Deutsch „halb sieben“ = 06:30 
+Ist nicht „half past seven“ sondern „half past six“!!
+
+# 03 Jul:
+
+    *   sholdn’t → shouldn’t (das u wurde vergessen)
+	•	planed → planned (past tense mit doppel-n)
+	•	thougt → thought (past participle mit h vor dem t)
+	•	shoke → shook (past tense von “shake” ist shook, nicht “shoke”)
+
+# 04 Jul:
+* Patrick never dress up for Halloween -> dresses up
+* we ate cake and drunk lemonade -> drank
+* they didn't have mobile phone when they was children -> were
+* do your friend have to do lots of homework? -> does
+* Does your parents have to work at the weekend -> do
+
 
